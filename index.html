@@ -831,13 +831,13 @@
 #scanVideo{width:100%;max-width:640px;display:block;margin:12px auto;background:#000;border-radius:12px}
 .scan-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
 .scan-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-top:12px}
-.scan-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px}
+.scan-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px}.scan-item.ok{background:rgba(47,224,124,.20);border:1.5px solid var(--green)}.scan-item.bad{background:rgba(255,90,90,.18);border:1.5px solid #ff8a8a}.scan-item.pending{border:1.5px solid rgba(251,191,36,.55)}.scan-item .scan-mark{font-weight:900;font-size:18px}.scan-item.ok .scan-mark,.scan-item.ok .scan-letter{color:var(--green)}.scan-item.bad .scan-mark,.scan-item.bad .scan-letter{color:#ff8a8a}
 .scan-item .scan-letter{margin-left:auto;font-size:22px;font-weight:900;color:#fbbf24}
 .scan-item .scan-name{font-weight:700}
 .scan-item .av svg{width:36px;height:36px;display:block;border-radius:50%}
 #printArea{display:none}
 .print-head{font-size:12pt;margin-bottom:6mm}
-.print-grid{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+.print-grid{display:grid;grid-template-columns:1fr 1fr;gap:8mm}.print-grid.large{grid-template-columns:1fr}.print-grid.large .qrcard-qr{width:95mm;height:95mm}.print-grid.large .qrcard-qr canvas{width:95mm;height:95mm}.print-grid.large .qrcard-name{font-size:22pt}.print-grid.huge{grid-template-columns:1fr}.print-grid.huge .qrcard-qr{width:150mm;height:150mm}.print-grid.huge .qrcard-qr canvas{width:150mm;height:150mm}.print-grid.huge .qrcard-name{font-size:24pt}
 .qrcard{border:2.5px solid #1e293b;border-radius:12px;padding:6mm;break-inside:avoid;page-break-inside:avoid;background:#fff;color:#1e293b}
 .qrcard-head{display:flex;align-items:center;gap:3mm}
 .qrcard-head .av svg{width:44px;height:44px;display:block;border-radius:50%}
@@ -850,7 +850,8 @@
 .qrcard-letter.bottom{bottom:-6mm;left:50%;transform:translateX(-50%)}
 .qrcard-letter.left{left:-6mm;top:50%;transform:translateY(-50%)}
 .qrcard-letter.right{right:-6mm;top:50%;transform:translateY(-50%)}
-@media print{
+@page{size:A4;margin:10mm}
+      @media print{
   body > :not(#printArea){display:none !important}
   #printArea{display:block !important}
 }
@@ -1745,7 +1746,7 @@ Chấp nhận các biến thể: “Câu 1.” hoặc chỉ “1.” thay cho �
     <div class="scan-top">
       <h2>📷 Máy quét thẻ QR</h2>
       <div class="sub" id="scanStatus">Đang chờ kết nối phòng…</div>
-      <div class="scan-meta"><span id="scanPin"></span> · <span id="scanQuestion"></span> · Đã quét <b id="scanCount">0</b>/<span id="scanTotal">0</span></div>
+      <div class="scan-meta"><span id="scanPin"></span> · <span id="scanQuestion"></span> · Đã quét <b id="scanCount">0</b>/<span id="scanTotal">0</span><span id="scanResult"></span></div>
     </div>
     <video id="scanVideo" playsinline muted autoplay></video>
     <div class="scan-actions">
@@ -1754,7 +1755,7 @@ Chấp nhận các biến thể: “Câu 1.” hoặc chỉ “1.” thay cho �
       <button class="btn" id="btnScanClear">🧹 Xóa đáp án câu này</button>
       <button class="btn danger" id="btnScanClose">✕ Đóng máy quét</button>
     </div>
-    <div class="sub" id="scanHint">Giơ thẻ sao cho mã QR lọt vào khung hình. Xoay thẻ để chữ A, B, C hoặc D lên trên cùng — máy sẽ đọc đúng chữ đó. Quét lại cùng một thẻ để đổi đáp án.</div>
+    <div class="sub" id="scanHint">Giơ thẻ sao cho mã QR lọt vào khung hình. Xoay thẻ để chữ A, B, C hoặc D lên trên cùng — máy sẽ đọc đúng chữ đó. Quét lại cùng một thẻ để đổi đáp án. Thẻ đã quét hiện viền vàng; khi giáo viên chốt câu, đáp án đúng chuyển xanh, đáp án sai chuyển đỏ.</div>
     <div id="scanList" class="scan-list"></div>
   </div>
   <div id="printArea"></div>
@@ -1765,7 +1766,7 @@ Chấp nhận các biến thể: “Câu 1.” hoặc chỉ “1.” thay cho �
       <div class="sub">Thẻ của lớp đang chọn, mỗi em một thẻ có mã QR riêng. Xoay thẻ để chữ A, B, C hoặc D lên trên cùng rồi giơ lên cho giáo viên quét. Bấm “🖨 In ngay” để mở hộp thoại in (chỉ in đúng các thẻ này).</div>
       <div class="field"><label>Loại thẻ</label>
       <select id="cardPrintMode"><option value="named">Theo lớp đang chọn — có tên từng em</option><option value="generic">Thẻ chung — chỉ số, dùng cho nhiều lớp</option></select></div>
-      <div class="field" id="genericCountField" style="display:none"><label>Số thẻ chung cần in</label><input type="number" id="genericCount" min="1" max="100" step="1" value="50" /></div>
+      <div class="field" id="genericCountField" style="display:none"><label>Số thẻ chung cần in</label><input type="number" id="genericCount" min="1" max="100" step="1" value="50" /></div><div class="field"><label>Cỡ thẻ in (giấy A4)</label><select id="cardPrintSize"><option value="large">To — 2 thẻ/trang, mã QR ~95mm (quét xa tốt)</option><option value="huge">Rất to — 1 thẻ/trang, mã QR ~150mm (quét từ xa nhất)</option><option value="normal">Vừa — 4–6 thẻ/trang (như trước)</option></select></div>
       <div class="actions"><button class="btn gold big" id="btnPrintNow">🖨 In ngay</button></div>
       <div class="sub">Nếu bấm In ngay mà không thấy hộp thoại in (hay gặp trên trình duyệt trong app Zalo/Facebook), hãy mở file này bằng Chrome rồi bấm In ngay lại, hoặc dùng menu trình duyệt → In (Ctrl+P).</div>
       <div id="cardPreview"></div>
@@ -15406,8 +15407,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 
       /* ============ BẢN THẺ QR: cách trả lời + avatar + in thẻ + máy quét ============ */
       var QR_MODE_KEY = 'rcv_qr_answer_mode';
-      function isCardMode() { try { return localStorage.getItem(QR_MODE_KEY) === 'card'; } catch (e) { return false; } }
-      function setAnswerMode(m) { try { localStorage.setItem(QR_MODE_KEY, m); } catch (e) {} renderQrModeUI(); renderAll(); }
+      /* Chế độ trả lời là trạng thái của ván này nên giữ trong bộ nhớ trước hết:
+         trình duyệt mà chặn ghi localStorage (mở bằng file tải về, webview lạ, chặn cookie)
+         sẽ làm setItem ném lỗi câm -> lần vẽ lại sau tự nhảy về 'phone'.
+         localStorage chỉ còn là bản lưu phụ, hỏng cũng không ảnh hưởng ván đang chơi. */
+      var qrAnswerMode = 'phone';
+      try { qrAnswerMode = localStorage.getItem(QR_MODE_KEY) === 'card' ? 'card' : 'phone'; } catch (e) {}
+      function isCardMode() { return qrAnswerMode === 'card'; }
+      function setAnswerMode(m) { qrAnswerMode = (m === 'card') ? 'card' : 'phone'; try { localStorage.setItem(QR_MODE_KEY, qrAnswerMode); } catch (e) {} renderQrModeUI(); renderAll(); }
       function renderQrModeUI() {
         var sel = $('roomAnswerModeSel'); if (!sel) return;
         sel.value = isCardMode() ? 'card' : 'phone';
@@ -15437,13 +15444,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       /* In thẻ QR: mỗi học sinh một thẻ (avatar + tên + số + mã QR riêng, chữ A/B/C/D quanh mã) */
       function cardPrintMode() { var sel = $('cardPrintMode'); return sel ? sel.value : 'named'; }
       function genericCardCount() { var v = parseInt(($('genericCount') ? $('genericCount').value : '50'), 10); if (isNaN(v) || v < 1) v = 1; if (v > 100) v = 100; return v; }
+      function cardPrintSize() { var s = $('cardPrintSize'); return (s && s.value) ? s.value : 'large'; }
       function buildCardsHTML() {
         var generic = cardPrintMode() === 'generic';
         var count = generic ? genericCardCount() : state.students.length;
         var head = generic
           ? 'Thẻ chung — không in tên, dùng cho mọi lớp: phát thẻ theo đúng thứ tự danh sách của ván đó (thẻ số mấy thì học sinh thứ mấy trong danh sách cầm).'
           : 'Thẻ trả lời — ' + esc(classLabel()) + ' · ' + state.students.length + ' học sinh · Mỗi thẻ có mã QR riêng: xoay thẻ để chữ A, B, C hoặc D lên trên cùng rồi giơ lên cho giáo viên quét.';
-        var html = '<div class="print-head">' + head + '</div><div class="print-grid">';
+        var html = '<div class="print-head">' + head + '</div><div class="print-grid ' + cardPrintSize() + '">';
         for (var i = 0; i < count; i++) {
           var nameHtml = generic ? 'Thẻ chung' : esc(state.students[i]);
           html += '<div class="qrcard"><div class="qrcard-head"><span class="av">' + avatarFor(i, 44) + '</span><span class="qrcard-name">' + nameHtml + '</span><span class="qrcard-num">Số ' + (i + 1) + '</span></div><div class="qrcard-qr"><span class="qrcard-letter top">A</span><span class="qrcard-letter right">B</span><span class="qrcard-letter bottom">C</span><span class="qrcard-letter left">D</span><canvas class="qrcanvas" width="220" height="220" data-qr="RCVQR:' + (i + 1) + '"></canvas></div></div>';
@@ -15497,12 +15505,20 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         var tEl = $('scanTotal'); if (tEl) tEl.textContent = scan.roster.length;
         var list = $('scanList'); if (!list) return;
         list.innerHTML = '';
+        var correct = (st && typeof st.correct === 'number') ? st.correct : -1;
+        var okCount = 0, badCount = 0;
         keys.sort(function (a, b) { return a - b; }).forEach(function (k) {
           var i = Number(k), letter = scan.map[k];
-          var d = document.createElement('div'); d.className = 'scan-item';
-          d.innerHTML = '<span class="av">' + avatarFor(i, 36) + '</span><span class="scan-name">' + esc(scan.roster[i] || ('Học sinh ' + (i + 1))) + '</span><span class="scan-letter">' + letter + '</span>';
+          /* Dap an dung chi co trong phong khi giao vien da chot cau (truoc do phong co tinh
+             de correct = -1 de hoc sinh khong doc duoc dap an som). Chua chot: the da quet
+             hien vien vang + dau tick de van nhan biet duoc ngay. */
+          var li = 'ABCD'.indexOf(letter), cls = 'scan-item pending', mark = '✓';
+          if (correct >= 0) { if (li === correct) { cls = 'scan-item ok'; mark = '✔'; okCount++; } else { cls = 'scan-item bad'; mark = '✘'; badCount++; } }
+          var d = document.createElement('div'); d.className = cls;
+          d.innerHTML = '<span class="av">' + avatarFor(i, 36) + '</span><span class="scan-name">' + esc(scan.roster[i] || ('Học sinh ' + (i + 1))) + '</span><span class="scan-mark">' + mark + '</span><span class="scan-letter">' + letter + '</span>';
           list.appendChild(d);
         });
+        var rEl = $('scanResult'); if (rEl) rEl.textContent = (correct >= 0) ? (' · ✔ ' + okCount + ' đúng · ✘ ' + badCount + ' sai') : '';
         var sEl = $('scanStatus'); if (sEl) sEl.textContent = scan.running ? 'Đang quét — giơ thẻ vào khung hình.' : 'Camera chưa bật — bấm “📷 Bật camera” để bắt đầu quét.';
       }
       /* Hướng xoay của thẻ từ 4 góc mã QR (jsQR trả góc theo hướng của mã): lên=A, phải=B, xuống=C, trái=D */
@@ -15570,6 +15586,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         openModal('modalCards');
       });
       $('cardPrintMode').addEventListener('change', function () { buildPrintCards(); });
+      $('cardPrintSize').addEventListener('change', function () { buildPrintCards(); });
       $('genericCount').addEventListener('change', function () { buildPrintCards(); });
       $('btnPrintNow').addEventListener('click', function () { window.print(); });
       $('roomAnswerModeSel').addEventListener('change', function () { setAnswerMode($('roomAnswerModeSel').value); });
